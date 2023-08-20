@@ -82,7 +82,7 @@ class LoveWindow(tkinter.Tk):
             LotteryWindow(self, man_count.get(), title_var_str.get(), all_man, allow_duplicate_man.get())
 
         is_remove_frame = tkinter.Frame(self)
-        is_remove_tips = tkinter.Label(is_remove_frame, text="重复抽奖", width=8, anchor=tkinter.W)
+        is_remove_tips = tkinter.Label(is_remove_frame, text="重复抽奖", width=7, anchor=tkinter.W)
         is_remove_tips.pack(side=tkinter.LEFT)
         allow_duplicate_man = tkinter.BooleanVar()
         allow_duplicate_man.set(True)
@@ -145,6 +145,7 @@ class LotteryWindow(tkinter.Toplevel):
     def init_window_attr(self):
         self.geometry('800x500+500+200')
         self.attributes("-fullscreen", True)
+        self.attributes('-alpha',0.7)
         # self.overrideredirect(True)
 
     def init_data(self):
@@ -165,19 +166,21 @@ class LotteryWindow(tkinter.Toplevel):
         if self.man_count != 5:
             self.create_name(self.human_frame_2, 5, self.man_count)
 
-    def create_name(self, frame, range_start, range_end):
+    def create_name(self, parent_frame, range_start, range_end):
+        base_font = -40 #字体越来越大的效果，很好看
         for love_man in range(range_start, range_end):
             self.show_mans.append(tkinter.StringVar(value="幸运儿"))
-            man_name = tkinter.Label(frame, textvariable=self.show_mans[love_man], justify='left',
+            man_name = tkinter.Label(parent_frame, textvariable=self.show_mans[love_man], justify='left',
                                      anchor=tkinter.CENTER,
                                      height=2,
-                                     font='楷体 -40', foreground='black', padx=2)
+                                     font='楷体 ' + str(base_font), foreground='black', padx=10)
             man_name.pack(side=tkinter.LEFT)
+            base_font = base_font + -10
 
     def init_view(self):
         show_label1_title = tkinter.Label(self, textvariable=self.activity_title, justify='left', anchor=tkinter.CENTER,
                                           height=4,
-                                          font='楷体 -70 bold', foreground='black')
+                                          font='楷体 -80 bold', foreground='black')
         show_label1_title.pack()
         self.human_frame_1 = tkinter.Frame(self)
         self.human_frame_1.pack()
