@@ -2,7 +2,7 @@
 import random
 import tkinter
 from tkinter import messagebox
-
+__version__= "1.1"
 gamer_list = []
 going = True
 
@@ -53,8 +53,8 @@ def lottery_end(str_var_list, man_duplicate_switch):
 class LoveWindow(tkinter.Tk):
     def __init__(self):
         super().__init__()
-        self.geometry("600x400")
-        self.title("叫我王员外的抽奖工具_v1.0")
+        self.geometry("700x400")
+        self.title("叫我王员外就行的抽奖工具_v" + __version__)
         self.init_bind_window_change()
         man_count_frame = tkinter.Frame(self)
         count_tips = tkinter.Label(man_count_frame, text="每轮人数", anchor=tkinter.W, width=8)
@@ -76,6 +76,7 @@ class LoveWindow(tkinter.Tk):
             all_man = self.man_list(input_man.get(1.0, "end"))
             if not title_var_str.get():
                 tkinter.messagebox.showerror("无主题", "没有主题,抽什么奖?")
+                return
             if not all_man:
                 tkinter.messagebox.showerror("无人", "没有人，抽什么奖？")
                 return
@@ -120,8 +121,10 @@ class LotteryWindow(tkinter.Toplevel):
         self.master = master
         self.master.state("icon")
         self.man_count = man_count
+        self.title_frame = None
         self.human_frame_1 = None
         self.human_frame_2 = None
+        self.my_canvas = None
         self.show_mans = None
         self.is_start = True
         self.all_man = all_man
@@ -145,7 +148,7 @@ class LotteryWindow(tkinter.Toplevel):
     def init_window_attr(self):
         self.geometry('800x500+500+200')
         self.attributes("-fullscreen", True)
-        self.attributes('-alpha',0.7)
+        self.attributes('-alpha',0.85)
         # self.overrideredirect(True)
 
     def init_data(self):
@@ -178,10 +181,12 @@ class LotteryWindow(tkinter.Toplevel):
             base_font = base_font + -10
 
     def init_view(self):
-        show_label1_title = tkinter.Label(self, textvariable=self.activity_title, justify='left', anchor=tkinter.CENTER,
+        self.title_frame = tkinter.Frame(self)
+        show_label1_title = tkinter.Label(self.title_frame, textvariable=self.activity_title, justify='left', anchor=tkinter.CENTER,
                                           height=4,
                                           font='楷体 -80 bold', foreground='black')
         show_label1_title.pack()
+        self.title_frame.pack()
         self.human_frame_1 = tkinter.Frame(self)
         self.human_frame_1.pack()
         self.human_frame_2 = tkinter.Frame(self)
@@ -192,6 +197,8 @@ class LotteryWindow(tkinter.Toplevel):
                                     height=4,
                                     font='楷体 -25 bold', foreground='red')
         show_label2.pack(side=tkinter.TOP, pady=20)
+        self.my_canvas = tkinter.Canvas(self,width=300, height=200)
+
 
         def let_love(event=None):
             if self.is_start and lottery_start(self.show_mans, tip_join_man_count_var):
@@ -208,7 +215,10 @@ class LotteryWindow(tkinter.Toplevel):
                                         font='宋体 -30 bold', fg='white')  # 服了，字符多大，控件就多大
         start_stop_btn.pack(side=tkinter.TOP)
         self.bind("<space>", let_love)  # 为啥<space>不好使，<Return>也不好使？原因找到了,因为没有焦点
+        self.my_canvas.create_oval(10, 10, 140, 140, fill = "yellow")
+        self.my_canvas.pack()
         self.focus_force()
+
 
     def destroy(self):
         self.master.state("normal")
